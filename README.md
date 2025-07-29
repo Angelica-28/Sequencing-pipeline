@@ -239,6 +239,18 @@ The script `pipelinefromFastqtoBAM.sh` automates the full preprocessing pipeline
 > Make sure the reference genome is indexed using `samtools faidx`, `GATK CreateSequenceDictionary`, and `bwa index` (to generate `.fai`, `.dict`, and BWA index files).  
 > A script is available in the repository as `prepare_ref.sh`.
 
+## 🚀 Launching Script
+Start your WGS pipeline with:
+
+```bash
+bash pipeline.sh
+```
+or 
+```bash
+nohup bash pipeline.sh > pipeline.log 2>&1 &
+```
+for background analysis and check status with ```tail pipeline.log```
+
 ## Output files 📁
 
 The pipeline generates the following files for each processed sample inside the 📁 `${NAME}` folder:
