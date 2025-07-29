@@ -29,7 +29,7 @@ To run the pipeline, you need:
   - [`Bcftools`](https://samtools.github.io/bcftools/)
   - Java 8+ (required for GATK)
   - [`DeDup`](0.12.8) - Present in repository file
-  - [`Qualimap`](v2.3) - Present in repository file
+  - [`Qualimap`](http://qualimap.conesalab.org/) - Downloaded
 
 ## 📁 Folder structure
 
