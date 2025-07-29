@@ -233,8 +233,8 @@ The script `pipelinefromFastqtoBAM.sh` automates the full preprocessing pipeline
 > [!WARNING]
 > Make sure the reference genome is indexed using `samtools faidx`, `GATK CreateSequenceDictionary`, and `bwa index` (to generate `.fai`, `.dict`, and BWA index files).  
 > A script is available in the repository as `prepare_ref.sh`.
-    ```bash
-    "$BCFTOOLS" mpileup -Ou -f "$REF" ${OUTPUT}/${NAME}_rmdup_sort.bam | \
-    "$BCFTOOLS" call -mv -Oz -o ${OUTPUT}/${NAME}.vcf.gz
-    "$BCFTOOLS" index ${OUTPUT}/${NAME}.vcf.gz
-    ```
+```bash
+"$BCFTOOLS" mpileup -Ou -f "$REF" ${OUTPUT}/${NAME}_rmdup_sort.bam | \
+"$BCFTOOLS" call -mv -Oz -o ${OUTPUT}/${NAME}.vcf.gz
+"$BCFTOOLS" index ${OUTPUT}/${NAME}.vcf.gz
+```
