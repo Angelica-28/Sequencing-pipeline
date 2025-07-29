@@ -38,20 +38,20 @@ To run the pipeline, you need:
 project/
 │
 ├── raw_data/
-│   ├──samples/# Input FASTQ files
-│   ├──pipelinefromFastqtoBAM.sh
+│   ├── samples/# Input FASTQ files
+│   ├── pipelinefromFastqtoBAM.sh
 ├── ref_genome/ # Reference genome FASTA and index files
-│   ├──prepare_ref.sh
-├──Programs
-    ├──FastQC
+│   ├── prepare_ref.sh
+├── Programs
+    ├── FastQC
     ├── tools/ # Locally installed bioinformatics tools
-        ├──adapterremoval
-        ├──bwa
-        ├──bcftools
-        ├──Dedup
-        ├──gatk
-        ├──qualimap
-        ├──samtools
+        ├── adapterremoval
+        ├── bwa
+        ├── bcftools
+        ├── Dedup
+        ├── gatk
+        ├── qualimap
+        ├── samtools
 ```
 ## 🛠️ Installation
 
