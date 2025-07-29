@@ -10,8 +10,8 @@ The pipeline includes the following steps:
 2. **Adapter trimming and quality filtering** using AdapterRemoval  
 3. **Read alignment** to a reference genome using BWA  
 4. **SAM to BAM conversion** using Samtools  
-5. **Variant calling** with GATK HaplotypeCaller  
-6. **VCF preparation** for PLINK compatibility  
+5. **Variant calling** with BCFtools mpileup  
+7. **VCF preparation** for PLINK compatibility  
 
 This workflow is intended for whole-genome or exome sequencing data. It can be adapted for RNA-seq or targeted sequencing datasets.
 
