@@ -230,11 +230,23 @@ The script `pipelinefromFastqtoBAM.sh` automates the full preprocessing pipeline
     ```            
 18. **Variant calling with BCFtools**
     Generates a VCF file from the cleaned, sorted, and duplicate-removed BAM file using `bcftools mpileup` and `bcftools call`.
-> [!WARNING]
-> Make sure the reference genome is indexed using `samtools faidx`, `GATK CreateSequenceDictionary`, and `bwa index` (to generate `.fai`, `.dict`, and BWA index files).  
-> A script is available in the repository as `prepare_ref.sh`.
 ```bash
 "$BCFTOOLS" mpileup -Ou -f "$REF" ${OUTPUT}/${NAME}_rmdup_sort.bam | \
 "$BCFTOOLS" call -mv -Oz -o ${OUTPUT}/${NAME}.vcf.gz
 "$BCFTOOLS" index ${OUTPUT}/${NAME}.vcf.gz
 ```
+> [!WARNING]
+> Make sure the reference genome is indexed using `samtools faidx`, `GATK CreateSequenceDictionary`, and `bwa index` (to generate `.fai`, `.dict`, and BWA index files).  
+> A script is available in the repository as `prepare_ref.sh`.
+
+## Output files 📁
+
+The pipeline generates the following files for each processed sample inside the 📁 `${NAME}` folder:
+
+- 📄 `${NAME}.sam` — raw alignment file produced by BWA MEM.
+- 📄 `${NAME}.bam` — unsorted BAM file converted from SAM.
+- 📂 `fastqc_results/` — directory containing FastQC reports.
+- 🗂️ `Output/qualimap/` — directory containing Qualimap reports in PDF and HTML format.  
+- 📝 `flagstat_${NAME}.txt` — mapping statistics report from `samtools flagstat`.
+- 📄 `${NAME}.vcf.gz` — compressed VCF file containing the called variants.
+- 📄 `${NAME}.vcf.gz.csi` — index file for the VCF.
