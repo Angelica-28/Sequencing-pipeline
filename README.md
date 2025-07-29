@@ -172,9 +172,9 @@ The script `pipelinefromFastqtoBAM.sh` automates the full preprocessing pipeline
    Aligns reads to the reference genome using `bwa aln`, and generates a `.sam` file with `bwa samse`.
    ```bash
    "$BWA" mem -R "@RG\tID:${NAME}\tSM:${NAME}\tPL:illumina" \
-       "$REF" \
-       "$NAME.adapt.collapsed.fastq.gz" \
-       > "$NAME.sam"
+   "$REF" \
+   "$NAME.adapt.collapsed.fastq.gz" \
+   > "$NAME.sam"
    ```
   >[!NOTE]
   > This step require time!      
