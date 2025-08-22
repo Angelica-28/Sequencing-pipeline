@@ -144,7 +144,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
    "$FASTQC" -o "$OUTPUT/$OUTPUT_DIR" -f fastq "$R1" --quiet
    "$FASTQC" -o "$OUTPUT/$OUTPUT_DIR" -f fastq "$R2" --quiet
    ```
-5. **Fastp paired-end read trimming and quality filtering **  
+5. **Fastp paired-end read trimming and quality filtering**  
    Fastp performs automatic detection and removal of adapter sequences in paired-end reads. In this configuration, the first 20 bases of each read in R1 and R2 are trimmed to mitigate potential biases or low-quality bases introduced during the initial sequencing cycles. Bases are classified as qualified only if their Phred score is ≥ 30 (corresponding to an estimated base-calling accuracy of 99.9%), which defines the threshold applied in subsequent quality filtering steps. Following trimming and quality control, reads shorter than 30 bp are discarded from the output.
    ```bash
        "$FASTP" \
