@@ -193,7 +193,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
    "$SAMTOOLS" sort -m 3G "$SAMPLE_OUT/${NAME}_fixmate.bam" -o "$SAMPLE_OUT/${NAME}_sorted.bam"
    ```
 >[!NOTE]
-> coordinate-sorted BAM is required for duplicate marking.
+> Coordinate-sorted BAM is required for duplicate marking.
 
 9. **Duplicate removal**  
     Samtools is used to mark and remove duplicates, then index the resulting BAM file for downstream analysis.
