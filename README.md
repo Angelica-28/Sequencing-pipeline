@@ -135,16 +135,16 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
 > [!WARNING]
 > These paths are specific to the local setup and must be edited before running the script. Make sure all tools are installed in accessible directories and update the variables accordingly.
 
-3. **Folder navigation**  
+2. **Folder navigation**  
    The script loops through all subfolders (one per sample), entering each to process the data found there.
 
-4. **Initial FastQC**  
+3. **Initial FastQC**  
    Performs quality control on the raw FASTQ files using FastQC and stores reports in a dedicated folder.
    ```bash
    "$FASTQC" -o "$OUTPUT/$OUTPUT_DIR" -f fastq "$R1" --quiet
    "$FASTQC" -o "$OUTPUT/$OUTPUT_DIR" -f fastq "$R2" --quiet
    ```
-5. **Fastp paired-end read trimming and quality filtering**  
+4. **Fastp paired-end read trimming and quality filtering**  
    Fastp performs automatic detection and removal of adapter sequences in paired-end reads. In this configuration, the first 20 bases of each read in R1 and R2 are trimmed to mitigate potential biases or low-quality bases introduced during the initial sequencing cycles. Bases are classified as qualified only if their Phred score is ≥ 30 (corresponding to an estimated base-calling accuracy of 99.9%), which defines the threshold applied in subsequent quality filtering steps. Following trimming and quality control, reads shorter than 30 bp are discarded from the output.
    ```bash
        "$FASTP" \
@@ -158,13 +158,13 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
        --html "$SAMPLE_OUT/${NAME}_fastp.html" \
        --json "$SAMPLE_OUT/${NAME}_fastp.json"
    ``` 
-6. **Second FastQC**  
+5. **Second FastQC**  
    Re-runs FastQC on the cleaned (trimmed) reads to assess post-processing quality.
    ```bash
    "$FASTQC" -o "$FASTQC_OUT" -f fastq "$SAMPLE_OUT/${NAME}_R1_trimmed.fastq.gz" --quiet
    "$FASTQC" -o "$FASTQC_OUT" -f fastq "$SAMPLE_OUT/${NAME}_R2_trimmed.fastq.gz" --quiet
    ```
-7. **Read alignment**  
+6. **Read alignment**  
    Aligns reads to the reference genome using `bwa mem`.
    ```bash
    "$BWA" mem -t 4 \
@@ -178,12 +178,12 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
 
   >[!NOTE]
   > This step require time!      
-8. **SAM to BAM conversion**  
+7. **SAM to BAM conversion**  
    Converts the SAM file to BAM using `samtools view`.
    ```bash
   "$SAMTOOLS" view -Sb ${OUTPUT}/${NAME}.sam -o ${OUTPUT}/${NAME}.bam
    ```
-9. **Sorting and indexing BAM**  
+8. **Sorting and indexing BAM**  
    Samtools is used to sort and fix paired-end alignment information. The BAM file is first name-sorted, then mate information is fixed, and finally the BAM is coordinate-sorted to produce the final `${NAME}_sorted.bam` ready for downstream analysis.
    ```bash
    "$SAMTOOLS" sort -n -m 3G "$SAMPLE_OUT/${NAME}.bam" -o "$SAMPLE_OUT/${NAME}_namesorted.bam"
@@ -193,14 +193,14 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
  >[!NOTE]
   > coordinate-sorted BAM is required for duplicate marking.
 
-10. **Duplicate removal**  
+9. **Duplicate removal**  
     Samtools is used to mark and remove duplicates, then index the resulting BAM file for downstream analysis.
    ```bash
    "$SAMTOOLS" markdup -r "$SAMPLE_OUT/${NAME}_sorted.bam" "$SAMPLE_OUT/${NAME}_rmdup.bam"
    "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup.bam"
    ```            
 
-11. **Qualimap report**  
+10. **Qualimap report**  
     Produces a detailed HTML and PDF report with Qualimap for assessing alignment coverage and quality.
     ```bash
     mkdir -p "$SAMPLE_OUT/qualimap"
@@ -208,7 +208,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
     "$QUALIMAP" bamqc -bam "$SAMPLE_OUT/${NAME}_rmdup.bam" \
         -outdir "$SAMPLE_OUT/qualimap" -outformat PDF:HTML --java-mem-size=30G
     ```            
-12. **Variant calling with GATK**
+11. **Variant calling with GATK**
     Generates a VCF file from the cleaned, sorted, and duplicate-removed BAM file using `GATK HaplotypeCallet`.
 ```bash
 "$GATK" HaplotypeCaller \
@@ -217,7 +217,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
         -O "$SAMPLE_OUT/${NAME}.vcf.gz" \
         -ERC GVCF
 ```
-13. **Temp file cleaning**
+12. **Temp file cleaning**
     ```bash
     rm -f "$SAMPLE_OUT/${NAME}.sam" \
           "$SAMPLE_OUT/${NAME}.bam" \
@@ -231,10 +231,10 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
           "$SAMPLE_OUT/${NAME}_sorted.bam" \
           "$SAMPLE_OUT/${NAME}_sorted.bam.bai" \
           "$R1" \
-          "$R2" 
-    ```
-> [!WARNING]
-> original FASTQ files are removed in this step, since a copy is used; the originals are stored locally.
+          "$R2"
+     ```
+     > [!WARNING]
+     > original FASTQ files are removed in this step, since a copy is used; the originals are stored locally.
 
 ## 🚀 Launching Script
 Start your WGS pipeline with:
