@@ -48,26 +48,26 @@ timed_exec() {
 # Change the paths below if your tools are in different locations                                                 #
 #-----------------------------------------------------------------------------------------------------------------#
 # Reference genome                                                                                                #
-REF="/home/usr/WGS/Ref_gen/Bos_taurus.ARS-UCD1.2.dna.toplevel.fa"                                                 #
+REF="/home/usr/project/ref_genome/Bos_taurus.ARS-UCD1.2.dna.toplevel.fa"                                          #
 # Path to FastQC binary                                                                                           #
-FASTQC="/home/usr/WGS/Programs/FastQC/fastqc"                                                                     #
+FASTQC="/home/usr/project/Programs/FastQC/fastqc"                                                                 #
 # Path to Adapter Removal                                                                                         #
-FASTP="/home/usr/WGS/Programs/tools/fastp/fastp"                                                                  #
+FASTP="/home/usr/project/Programs/tools/fastp/fastp"                                                              #
 # Path to BWA                                                                                                     #
-BWA="/home/usr/WGS/Programs/tools/bwa-0.7.17/bwa"                                                                 #
+BWA="/home/usr/project/Programs/tools/bwa-0.7.17/bwa"                                                             #
 # Path to Samtools                                                                                                #
-SAMTOOLS="/home/usr/WGS/Programs/tools/samtools-1.19.2/samtools"                                                  #
+SAMTOOLS="/home/usr/project/Programs/tools/samtools-1.19.2/samtools"                                              #
 # Path to GATK                                                                                                    #
-GATK="/home/usr/WGS/Programs/tools/gatk-4.5.0.0/gatk"                                                             #
+GATK="/home/usr/project/Programs/tools/gatk-4.5.0.0/gatk"                                                         #
 # Path to bcftools                                                                                                #
-BCFTOOLS="/home/usr/WGS/Programs/tools/bcftools-1.19/bcftools"                                                    #
+BCFTOOLS="/home/usr/project/Programs/tools/bcftools-1.19/bcftools"                                                #
 # Path to Qualimap                                                                                                #
-QUALIMAP="/home/usr/WGS/Programs/tools/qualimap_v2.3/qualimap"                                                    #
+QUALIMAP="/home/usr/project/Programs/tools/qualimap_v2.3/qualimap"                                                #
 #-----------------------------------------------------------------------------------------------------------------#
 
 #=============================== 2. PATH SETUP =================================#
 BASE_DIR="$(pwd)"
-FASTQ_DIR="$BASE_DIR/AG_fastq"
+FASTQ_DIR="$BASE_DIR/raw_data"
 OUTPUT_DIR="$BASE_DIR/output"
 mkdir -p "$OUTPUT_DIR"
 #============================================================================#
