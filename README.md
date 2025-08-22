@@ -172,16 +172,18 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
     "$REF" \
     "$SAMPLE_OUT/${NAME}_R1_trimmed.fastq.gz" "$SAMPLE_OUT/${NAME}_R2_trimmed.fastq.gz" > "$SAMPLE_OUT/${NAME}.sam"
    ```
-   > [!WARNING]
+
+> [!WARNING]
 > Make sure the reference genome is indexed using `samtools faidx`, `GATK CreateSequenceDictionary`, and `bwa index` (to generate `.fai`, `.dict`, and BWA index files).  
 > A script is available in the repository as `prepare_ref.sh`.
 
-  >[!NOTE]
-  > This step require time!      
+>[!NOTE]
+> This step require time!      
+
 7. **SAM to BAM conversion**  
    Converts the SAM file to BAM using `samtools view`.
    ```bash
-  "$SAMTOOLS" view -Sb ${OUTPUT}/${NAME}.sam -o ${OUTPUT}/${NAME}.bam
+   "$SAMTOOLS" view -Sb ${OUTPUT}/${NAME}.sam -o ${OUTPUT}/${NAME}.bam
    ```
 8. **Sorting and indexing BAM**  
    Samtools is used to sort and fix paired-end alignment information. The BAM file is first name-sorted, then mate information is fixed, and finally the BAM is coordinate-sorted to produce the final `${NAME}_sorted.bam` ready for downstream analysis.
@@ -190,8 +192,8 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
    "$SAMTOOLS" fixmate -m "$SAMPLE_OUT/${NAME}_namesorted.bam" "$SAMPLE_OUT/${NAME}_fixmate.bam"
    "$SAMTOOLS" sort -m 3G "$SAMPLE_OUT/${NAME}_fixmate.bam" -o "$SAMPLE_OUT/${NAME}_sorted.bam"
    ```
- >[!NOTE]
-  > coordinate-sorted BAM is required for duplicate marking.
+>[!NOTE]
+> coordinate-sorted BAM is required for duplicate marking.
 
 9. **Duplicate removal**  
     Samtools is used to mark and remove duplicates, then index the resulting BAM file for downstream analysis.
@@ -210,13 +212,13 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
     ```            
 11. **Variant calling with GATK**
     Generates a VCF file from the cleaned, sorted, and duplicate-removed BAM file using `GATK HaplotypeCallet`.
-```bash
-"$GATK" HaplotypeCaller \
+    ```bash
+    "$GATK" HaplotypeCaller \
         -R "$REF" \
         -I "$SAMPLE_OUT/${NAME}_rmdup.bam" \
         -O "$SAMPLE_OUT/${NAME}.vcf.gz" \
         -ERC GVCF
-```
+    ```
 12. **Temp file cleaning**
     ```bash
     rm -f "$SAMPLE_OUT/${NAME}.sam" \
@@ -233,8 +235,8 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
           "$R1" \
           "$R2"
      ```
-     > [!WARNING]
-     > original FASTQ files are removed in this step, since a copy is used; the originals are stored locally.
+> [!WARNING]
+> original FASTQ files are removed in this step, since a copy is used; the originals are stored locally.
 
 ## 🚀 Launching Script
 Start your WGS pipeline with:
