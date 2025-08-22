@@ -23,7 +23,7 @@ To run the pipeline, you need:
 - Bash shell (Unix-like environment)
 - Local (non-root) installations of:
   - [`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-  - [`Fastp`](wget http://opengene.org/fastp/fastp.1.0.1)
+  - [`Fastp`](http://opengene.org/fastp/fastp.1.0.1)
   - [`BWA`](http://bio-bwa.sourceforge.net/)
   - [`Samtools`](http://www.htslib.org/)
   - [`GATK`](https://gatk.broadinstitute.org/)
