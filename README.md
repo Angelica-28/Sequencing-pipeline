@@ -22,14 +22,14 @@ To run the pipeline, you need:
 
 - Bash shell (Unix-like environment)
 - Local (non-root) installations of:
-  - [`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-  - [`Fastp`](http://opengene.org/fastp/fastp.1.0.1)
-  - [`BWA`](http://bio-bwa.sourceforge.net/)
-  - [`Samtools`](http://www.htslib.org/)
-  - [`GATK`](https://gatk.broadinstitute.org/)
-  - [`Bcftools`](https://samtools.github.io/bcftools/)
+  - [`FastQC`] (https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+  - [`Fastp`] (http://opengene.org/fastp/fastp.1.0.1)
+  - [`BWA`] (http://bio-bwa.sourceforge.net/)
+  - [`Samtools`] (http://www.htslib.org/)
+  - [`GATK`] (https://gatk.broadinstitute.org/)
+  - [`Bcftools`] (https://samtools.github.io/bcftools/)
   - Java 8+ (required for GATK)
-  - [`Qualimap`](http://qualimap.conesalab.org/) - Downloaded
+  - [`Qualimap`] (http://qualimap.conesalab.org/) - Downloaded
 
 ## 📁 Folder structure
 
