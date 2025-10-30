@@ -39,7 +39,7 @@ timed_exec() {
 }
 #----------------------------------------------------------------------------#
 
-#=============================== 1. CONFIGURATION ==============================#
+#=============================== CONFIGURATION ==============================#
 #-----------------------------------------------------------------------------------------------------------------#
 # Change the reference genome path if needed                                                                      #
 # This is the reference genome used in the script                                                                 #
@@ -48,26 +48,26 @@ timed_exec() {
 # Change the paths below if your tools are in different locations                                                 #
 #-----------------------------------------------------------------------------------------------------------------#
 # Reference genome                                                                                                #
-REF="/home/usr/project/ref_genome/Bos_taurus.ARS-UCD1.2.dna.toplevel.fa"                                          #
+REF="/home/angelica/WGS/Ref_gen/Bos_taurus.ARS-UCD1.2.dna.toplevel.fa"                                            #
 # Path to FastQC binary                                                                                           #
-FASTQC="/home/usr/project/Programs/FastQC/fastqc"                                                                 #
+FASTQC="/home/angelica/WGS/Programs/FastQC/fastqc"                                                                #
 # Path to Adapter Removal                                                                                         #
-FASTP="/home/usr/project/Programs/tools/fastp/fastp"                                                              #
+FASTP="/home/angelica/WGS/Programs/tools/fastp/fastp"                                                             #
 # Path to BWA                                                                                                     #
-BWA="/home/usr/project/Programs/tools/bwa-0.7.17/bwa"                                                             #
+BWA="/home/angelica/WGS/Programs/tools/bwa-0.7.17/bwa"                                                            #
 # Path to Samtools                                                                                                #
-SAMTOOLS="/home/usr/project/Programs/tools/samtools-1.19.2/samtools"                                              #
-# Path to GATK                                                                                                    #
-GATK="/home/usr/project/Programs/tools/gatk-4.5.0.0/gatk"                                                         #
+SAMTOOLS="/home/angelica/WGS/Programs/tools/samtools-1.19.2/samtools"                                             #
+# Path to GATK                                                                                                    # 
+GATK="/home/angelica/WGS/Programs/tools/gatk-4.5.0.0/gatk"                                                        #
 # Path to bcftools                                                                                                #
-BCFTOOLS="/home/usr/project/Programs/tools/bcftools-1.19/bcftools"                                                #
+BCFTOOLS="/home/angelica/WGS/Programs/tools/bcftools-1.19/bcftools"                                               #                                     
 # Path to Qualimap                                                                                                #
-QUALIMAP="/home/usr/project/Programs/tools/qualimap_v2.3/qualimap"                                                #
+QUALIMAP="/home/angelica/WGS/Programs/tools/qualimap_v2.3/qualimap"                                               #
 #-----------------------------------------------------------------------------------------------------------------#
 
-#=============================== 2. PATH SETUP =================================#
+#=============================== PATH SETUP =================================#
 BASE_DIR="$(pwd)"
-FASTQ_DIR="$BASE_DIR/raw_data"
+FASTQ_DIR="$BASE_DIR/AG_fastq"
 OUTPUT_DIR="$BASE_DIR/output"
 mkdir -p "$OUTPUT_DIR"
 #============================================================================#
@@ -89,11 +89,11 @@ for R1 in "${FILES[@]}"; do
 
     mkdir -p "$FASTQC_OUT"
 
-    echo "======================3.FastQC on $NAME======================"
+    echo "======================1.FastQC on $NAME======================"
     timed_exec "FastQC on $NAME R1" "$FASTQC" -o "$FASTQC_OUT" -f fastq "$R1" --quiet
     timed_exec "FastQC on $NAME R2" "$FASTQC" -o "$FASTQC_OUT" -f fastq "$R2" --quiet
 
-    echo "======================4.Fastp on $NAME======================"
+    echo "======================2.Fastp on $NAME======================"
     timed_exec "Fastp on $NAME" "$FASTP" \
        -i "$R1" -I "$R2" \
        -o "$SAMPLE_OUT/${NAME}_R1_trimmed.fastq.gz" \
@@ -105,23 +105,23 @@ for R1 in "${FILES[@]}"; do
        --html "$SAMPLE_OUT/${NAME}_fastp.html" \
        --json "$SAMPLE_OUT/${NAME}_fastp.json"
 
-    echo "==================5.Second FastQC analysis on $NAME=================="
+    echo "==================3.Second FastQC analysis on $NAME=================="
     timed_exec "FastQC R1 trimmed $NAME" "$FASTQC" -o "$FASTQC_OUT" -f fastq "$SAMPLE_OUT/${NAME}_R1_trimmed.fastq.gz" --quiet
     timed_exec "FastQC R2 trimmed $NAME" "$FASTQC" -o "$FASTQC_OUT" -f fastq "$SAMPLE_OUT/${NAME}_R2_trimmed.fastq.gz" --quiet
 
-    echo "==================6.BWA MEM on $NAME=================="
+    echo "==================4.BWA MEM on $NAME=================="
     "$BWA" mem -t 4 \
     -R "@RG\tID:${NAME}\tSM:${NAME}\tPL:illumina" \
     "$REF" \
     "$SAMPLE_OUT/${NAME}_R1_trimmed.fastq.gz" "$SAMPLE_OUT/${NAME}_R2_trimmed.fastq.gz" > "$SAMPLE_OUT/${NAME}.sam"
 
-    echo "==================7.SAM to BAM conversion on $NAME=================="
+    echo "==================5.SAM to BAM conversion on $NAME=================="
     timed_exec "SAM to BAM $NAME" "$SAMTOOLS" view -Sb "$SAMPLE_OUT/${NAME}.sam" -o "$SAMPLE_OUT/${NAME}.bam"
 
-    echo "==================8.Sorting BAM by name on $NAME=================="
+    echo "==================6.Sorting BAM by name on $NAME=================="
     timed_exec "Sort BAM by name $NAME" "$SAMTOOLS" sort -n -m 3G "$SAMPLE_OUT/${NAME}.bam" -o "$SAMPLE_OUT/${NAME}_namesorted.bam"
 
-    echo "==================8.Fixmate on $NAME=================="
+    echo "==================7.Fixmate on $NAME=================="
     timed_exec "Fixmate $NAME" "$SAMTOOLS" fixmate -m "$SAMPLE_OUT/${NAME}_namesorted.bam" "$SAMPLE_OUT/${NAME}_fixmate.bam"
 
     echo "==================8.Sorting BAM by coordinate on $NAME=================="
@@ -129,18 +129,25 @@ for R1 in "${FILES[@]}"; do
 
     echo "==================9.Mark duplicates on $NAME=================="
     timed_exec "Mark duplicates $NAME" "$SAMTOOLS" markdup -r "$SAMPLE_OUT/${NAME}_sorted.bam" "$SAMPLE_OUT/${NAME}_rmdup.bam"
-    timed_exec "Index final BAM $NAME" "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup.bam"
+    timed_exec "Index BAM $NAME" "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup.bam"
+    
+    echo "==================10a.Filter BAM by MAPQ > 25 on $NAME=================="
+    timed_exec "Filter BAM by MAPQ $NAME" "$SAMTOOLS" view -b -q 25 "$SAMPLE_OUT/${NAME}_rmdup.bam" > "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam"
+    timed_exec "Index final BAM $NAME" "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam"
 
-    echo "==================10.Qualimap on $NAME=================="
+    echo "==================10b.Sorting BAM by coordinate on $NAME=================="
+    timed_exec "Sort final BAM by coordinate $NAME" "$SAMTOOLS" sort -m 3G "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam" -o "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam"
+
+    echo "==================11.Qualimap on $NAME=================="
     mkdir -p "$SAMPLE_OUT/qualimap"
     unset DISPLAY
-    timed_exec "Qualimap $NAME" "$QUALIMAP" bamqc -bam "$SAMPLE_OUT/${NAME}_rmdup.bam" \
+    timed_exec "Qualimap $NAME" "$QUALIMAP" bamqc -bam "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam" \
         -outdir "$SAMPLE_OUT/qualimap" -outformat PDF:HTML --java-mem-size=30G
 
-    echo "==================11.HaplotypeCaller on $NAME=================="
+    echo "==================12.HaplotypeCaller on $NAME=================="
     timed_exec "HaplotypeCaller $NAME" "$GATK" HaplotypeCaller \
         -R "$REF" \
-        -I "$SAMPLE_OUT/${NAME}_rmdup.bam" \
+        -I "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam" \
         -O "$SAMPLE_OUT/${NAME}.vcf.gz" \
         -ERC GVCF
 
@@ -153,7 +160,7 @@ for R1 in "${FILES[@]}"; do
        exit 1
     fi
 
-    echo "==================12.Cleaning temporary files=================="
+    echo "==================13.Cleaning temporary files=================="
     rm -f "$SAMPLE_OUT/${NAME}.sam" \
           "$SAMPLE_OUT/${NAME}.bam" \
           "$SAMPLE_OUT/${NAME}.bam.bai" \
