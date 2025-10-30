@@ -200,17 +200,24 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
    ```bash
    "$SAMTOOLS" markdup -r "$SAMPLE_OUT/${NAME}_sorted.bam" "$SAMPLE_OUT/${NAME}_rmdup.bam"
    "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup.bam"
-   ```            
-
-10. **Qualimap report**  
+   ```
+10. **Filter for mapping quality**
+    filter out any alignments with a mapping quality below 25, saving a BAM file that contains only high-quality, uniquely aligned reads. The file is then indexed for fast access and sorted to ensure proper coordinate order, preparin
+    it for downstream variant calling and qualimap.
+    ```bash
+    "$SAMTOOLS" view -b -q 25 "$SAMPLE_OUT/${NAME}_rmdup.bam" > "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam"
+    "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam"
+    "$SAMTOOLS" sort -m 3G "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam" -o "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam"
+    ``'
+11. **Qualimap report**  
     Produces a detailed HTML and PDF report with Qualimap for assessing alignment coverage and quality.
     ```bash
     mkdir -p "$SAMPLE_OUT/qualimap"
     unset DISPLAY
-    "$QUALIMAP" bamqc -bam "$SAMPLE_OUT/${NAME}_rmdup.bam" \
+    timed_exec "Qualimap $NAME" "$QUALIMAP" bamqc -bam "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam" \
         -outdir "$SAMPLE_OUT/qualimap" -outformat PDF:HTML --java-mem-size=30G
     ```            
-11. **Variant calling with GATK**
+12. **Variant calling with GATK**
     Generates a VCF file from the cleaned, sorted, and duplicate-removed BAM file using `GATK HaplotypeCallet`.
     ```bash
     "$GATK" HaplotypeCaller \
@@ -219,7 +226,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
         -O "$SAMPLE_OUT/${NAME}.vcf.gz" \
         -ERC GVCF
     ```
-12. **Temp file cleaning**
+13. **Temp file cleaning**
     ```bash
     rm -f "$SAMPLE_OUT/${NAME}.sam" \
           "$SAMPLE_OUT/${NAME}.bam" \
