@@ -211,6 +211,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
     java -jar "$PICARD" MarkDuplicates -I "$SAMPLE_OUT/${NAME}_sorted.bam" -O "$SAMPLE_OUT/${NAME}_rmdup.bam" -M "$SAMPLE_OUT/${NAME}_markdup_metrics.txt" -REMOVE_DUPLICATES true -CREATE_INDEX true
    ```
 10. **Filter for mapping quality**
+
     Filter out any alignments with a mapping quality below 25, saving a BAM file that contains only high-quality, uniquely aligned reads. The file is then indexed for fast access and sorted to ensure proper coordinate order, preparin
     it for downstream variant calling and qualimap.
     ```bash
