@@ -228,6 +228,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
         -outdir "$SAMPLE_OUT/qualimap" -outformat PDF:HTML --java-mem-size=30G
     ```            
 13. **Variant calling with GATK**
+
     Generates a VCF file from the cleaned, sorted, and duplicate-removed BAM file using `GATK HaplotypeCallet`.
     ```bash
     "$GATK" HaplotypeCaller \
@@ -236,7 +237,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
         -O "$SAMPLE_OUT/${NAME}.vcf.gz" \
         -ERC GVCF
     ```
-14. **Temp file cleaning**
+15. **Temp file cleaning**
     ```bash
     rm -f "$SAMPLE_OUT/${NAME}.sam" \
           "$SAMPLE_OUT/${NAME}.bam" \
