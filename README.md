@@ -110,10 +110,19 @@ unzip gatk-4.5.0.0.zip
 
 ### 🔹 Bcftools
 ```bash
+mkdir -p tools/bcftools
+cd tools/bcftools
 wget https://github.com/samtools/bcftools/releases/download/1.19/bcftools-1.19.tar.bz2
 tar -xjf bcftools-1.19.tar.bz2
 cd bcftools-1.19
 make
+```
+
+### 🔹 Picard
+```bash
+mkdir -p tools/picard
+cd tools/picard
+wget https://github.com/broadinstitute/picard/releases/download/3.1.1/picard.jar
 ```
 ## 🔁 Pipeline steps explained
 
@@ -130,7 +139,8 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
    SAMTOOLS="/home/usr/WGS/Programs/tools/samtools-1.19.2/samtools"                                                                                                                                                  
    GATK="/home/usr/WGS/Programs/tools/gatk-4.5.0.0/gatk"                                                                                                                                                       
    BCFTOOLS="/home/usr/WGS/Programs/tools/bcftools-1.19/bcftools"                                                                                                                                                                                    
-   QUALIMAP="/home/usr/WGS/Programs/tools/qualimap_v2.3/qualimap"
+   QUALIMAP="/home/usr/WGS/Programs/tools/qualimap_v2.3/qualimap"                                                                                             
+   PICARD="/home/angelica/WGS/Programs/tools/picard/picard.jar"  
    ```
 > [!WARNING]
 > These paths are specific to the local setup and must be edited before running the script. Make sure all tools are installed in accessible directories and update the variables accordingly.
@@ -196,19 +206,18 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
 > Coordinate-sorted BAM is required for duplicate marking.
 
 9. **Duplicate removal**  
-    Samtools is used to mark and remove duplicates, then index the resulting BAM file for downstream analysis.
+    Picard is used to mark and remove duplicates, then index the resulting BAM file for downstream analysis.
    ```bash
-   "$SAMTOOLS" markdup -r "$SAMPLE_OUT/${NAME}_sorted.bam" "$SAMPLE_OUT/${NAME}_rmdup.bam"
-   "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup.bam"
+    java -jar "$PICARD" MarkDuplicates -I "$SAMPLE_OUT/${NAME}_sorted.bam" -O "$SAMPLE_OUT/${NAME}_rmdup.bam" -M "$SAMPLE_OUT/${NAME}_markdup_metrics.txt" -REMOVE_DUPLICATES true -CREATE_INDEX true
    ```
 10. **Filter for mapping quality**
     filter out any alignments with a mapping quality below 25, saving a BAM file that contains only high-quality, uniquely aligned reads. The file is then indexed for fast access and sorted to ensure proper coordinate order, preparin
     it for downstream variant calling and qualimap.
     ```bash
     "$SAMTOOLS" view -b -q 25 "$SAMPLE_OUT/${NAME}_rmdup.bam" > "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam"
-    "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam"
     "$SAMTOOLS" sort -m 3G "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam" -o "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam"
-    ``'
+    "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam"
+    ```
 11. **Qualimap report**  
     Produces a detailed HTML and PDF report with Qualimap for assessing alignment coverage and quality.
     ```bash
