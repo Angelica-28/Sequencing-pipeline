@@ -218,7 +218,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
     "$SAMTOOLS" sort -m 3G "$SAMPLE_OUT/${NAME}_rmdup_mapq25.bam" -o "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam"
     "$SAMTOOLS" index "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam"
     ```
-11. **Qualimap report**  
+12. **Qualimap report**  
     Produces a detailed HTML and PDF report with Qualimap for assessing alignment coverage and quality.
     ```bash
     mkdir -p "$SAMPLE_OUT/qualimap"
@@ -226,7 +226,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
     timed_exec "Qualimap $NAME" "$QUALIMAP" bamqc -bam "$SAMPLE_OUT/${NAME}_rmdup_mapq25_sorted.bam" \
         -outdir "$SAMPLE_OUT/qualimap" -outformat PDF:HTML --java-mem-size=30G
     ```            
-12. **Variant calling with GATK**
+13. **Variant calling with GATK**
     Generates a VCF file from the cleaned, sorted, and duplicate-removed BAM file using `GATK HaplotypeCallet`.
     ```bash
     "$GATK" HaplotypeCaller \
@@ -235,7 +235,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
         -O "$SAMPLE_OUT/${NAME}.vcf.gz" \
         -ERC GVCF
     ```
-13. **Temp file cleaning**
+14. **Temp file cleaning**
     ```bash
     rm -f "$SAMPLE_OUT/${NAME}.sam" \
           "$SAMPLE_OUT/${NAME}.bam" \
