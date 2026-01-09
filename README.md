@@ -35,22 +35,22 @@ To run the pipeline, you need:
 
 # The recommended directory organization is:
 ```plaintext
-project/
+📂 project/
 │
-├── raw_data/
-│   ├── samples/# Input FASTQ files
-│   ├── seq_pipeline.sh
-├── ref_genome/ # Reference genome FASTA and index files
-│   ├── prepare_ref.sh
-├── Programs
-    ├── FastQC
-    ├── tools/ # Locally installed bioinformatics tools
-        ├── bwa
-        ├── bcftools
-        ├── gatk
-        ├── qualimap
-        ├── samtools
-        ├── fastp
+├── 📂 raw_data/
+│   ├── 📂 samples/# Input FASTQ files
+│   ├── 📝 seq_pipeline.sh
+├── 📂 ref_genome/ # Reference genome FASTA and index files
+│   ├── 📝 prepare_ref.sh
+├──📂  Programs
+    ├── 📂 FastQC
+    ├── 📂 tools/ # Locally installed bioinformatics tools
+        ├──📂  bwa
+        ├── 📂 bcftools
+        ├── 📂 gatk
+        ├── 📂 qualimap
+        ├── 📂 samtools
+        ├── 📂 fastp
 ```
 ## 🛠️ Installation
 
