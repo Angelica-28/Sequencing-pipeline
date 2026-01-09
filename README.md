@@ -124,6 +124,14 @@ mkdir -p tools/picard
 cd tools/picard
 wget https://github.com/broadinstitute/picard/releases/download/3.1.1/picard.jar
 ```
+
+### 🧬 Ref Genome 
+```bash
+mkdir -p ref_genome
+cd ref_genome/
+wget ftp://ftp.ensembl.org/pub/release-110/fasta/bos_taurus/dna/Bos_taurus.ARS-UCD1.2.dna_toplevel.fa.gz
+gunzip Bos_taurus.ARS-UCD1.2.dna_toplevel.fa.gz
+```
 ## 🔁 Pipeline steps explained
 
 The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw FASTQ files to final cleaned BAM files ready for variant calling and PLINK conversion. Here's a step-by-step explanation of what each section does:
