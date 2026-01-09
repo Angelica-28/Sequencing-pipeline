@@ -150,7 +150,7 @@ The script `seq_pipeline.sh` automates the full preprocessing pipeline, from raw
    GATK="/home/usr/WGS/Programs/tools/gatk-4.5.0.0/gatk"                                                                                                                                                       
    BCFTOOLS="/home/usr/WGS/Programs/tools/bcftools-1.19/bcftools"                                                                                                                                                                                    
    QUALIMAP="/home/usr/WGS/Programs/tools/qualimap_v2.3/qualimap"                                                                                             
-   PICARD=""/home/usr/WGS/Programs/tools/picard/picard.jar"  
+   PICARD="/home/usr/WGS/Programs/tools/picard/picard.jar"  
    ```
 > [!WARNING]
 > These paths are specific to the local setup and must be edited before running the script. Make sure all tools are installed in accessible directories and update the variables accordingly.
