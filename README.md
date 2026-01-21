@@ -74,7 +74,7 @@ chmod +x FastQC/fastqc
 
 ```bash
 mkdir -p tools/fastp
-cd tools/fastqc
+cd tools/fastp
 wget http://opengene.org/fastp/fastp.1.0.1
 chmod a+x fastp.1.0.1
 mv fastp.1.0.1 fastp
