@@ -38,27 +38,23 @@ To run the pipeline, you need:
 # The recommended directory organization is:
 ```plaintext
 📂 project/
-│
-├── 📂 raw_data/
-│   ├── 📂 samples/# Input FASTQ files
+├── 📂 container/
+│   └── 📝 pipeline.def
+├── 📂 scripts/
 │   ├── 📝 seq_pipeline.sh
-├── 📂 ref_genome/ # Reference genome FASTA and index files
-│   ├── 📝 prepare_ref.sh
-├──📂  Programs
-    ├── 📂 FastQC
-    ├── 📂 tools/ # Locally installed bioinformatics tools
-        ├──📂  bwa
-        ├── 📂 bcftools
-        ├── 📂 gatk
-        ├── 📂 qualimap
-        ├── 📂 samtools
-        ├── 📂 fastp
+│   └── 📝 prepare_ref.sh
+├── 📂 raw_data/
+│   └── 📂 samples/             
+├── 📂 ref_genome/               
 ```
 ## 🛠️ Installation
 
-Since the pipeline is designed for environments without `sudo` access, all tools must be installed locally in the `tools/` directory.
+This pipeline was originally designed for environments without `sudo` access, where all required software must be installed locally in a `tools/` directory.
 
-You can download and install each tool with the following instructions:
+Detailed instructions for manual installation of each tool are provided below for users who wish to reproduce this setup without containers.
+
+Alternatively, a fully reproducible containerized environment is provided via Apptainer.
+Users are strongly encouraged to use the Apptainer definition file `pipeline.def` to build a single container `pipeline.sif` that includes all required software and dependencies, eliminating the need for manual installation and ensuring portability across systems.
 
 ### 🔹 FastQC
 
